@@ -56,7 +56,7 @@ class Mirrorlist:
                 # Commented (unused) server found.
                 servers.unused[server] = None
 
-    def merge_from_simple(self, other_mirrorlist):
+    def merge_from_simple(self, other_mirrorlist, reorder=True):
         """
         Merges the other_mirrorlist into this one, ignoring commonly untouched data.
 
@@ -64,12 +64,17 @@ class Mirrorlist:
         also in this mirrorlist.
 
         :param other_mirrorlist: The Mirrorlist to copy data from.
+        :param reorder: If True, then the sections of this mirrorlist will be reordered to match the order of sections
+        in the other_mirrorlist.
         :return: None
         """
         for section in other_mirrorlist.servers:
             if section not in self.servers:
                 print("W: Section `%s' has been dropped." % section, file=sys.stderr)
                 continue
+
+            if reorder:
+                self.servers.move_to_end(section)
 
             for used_server in other_mirrorlist.servers[section].used:
                 if used_server in self.servers[section].used:
