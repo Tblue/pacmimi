@@ -1,6 +1,7 @@
 from collections import OrderedDict, namedtuple
 import re
 import sys
+import time
 
 
 MirrorSection = namedtuple("MirrorSection", ["used", "unused"])
@@ -9,6 +10,7 @@ MirrorSection = namedtuple("MirrorSection", ["used", "unused"])
 class Mirrorlist:
     def __init__(self, file_obj):
         self._file = file_obj
+        self.gen_time = None
         self.servers = OrderedDict()
 
         self._parse()
@@ -19,6 +21,18 @@ class Mirrorlist:
         section = None
 
         for (i, line) in enumerate(lines):
+            # Is this the generation date of the mirrorlist?
+            if self.gen_time is None:
+                match = re.search(r'^## Generated on (\d{4}-\d{2}-\d{2})\b', line)
+                if match is not None:
+                    try:
+                        self.gen_time = time.strptime(match.group(1), "%Y-%m-%d")
+                    except ValueError:
+                        # Invalid date. Ignore it and try again if a similar line is encountered.
+                        pass
+
+                    continue
+
             # Start of new section?
             match = re.search(r'^\s*##\s*(.+?)\s*$', line)
             if match is not None:
@@ -34,7 +48,7 @@ class Mirrorlist:
                 MirrorSection(OrderedDict(), OrderedDict())
             )
             server = match.group(2)
-            
+
             if match.group(1) is None:
                 # Uncommented (used) server found.
                 servers.used[server] = None
@@ -70,7 +84,14 @@ class Mirrorlist:
                 del self.servers[section].unused[used_server]
 
     def get_string(self):
-        data = ""
+        data = "##\n## Arch Linux repository mirrorlist\n"
+        data += "## Generated on %s" % time.strftime("%Y-%m-%d", time.gmtime())
+
+        if self.gen_time is not None:
+            data += " (originally %s)" % time.strftime("%Y-%m-%d", self.gen_time)
+
+        data += "\n##\n"
+
         for section in self.servers:
             if section is not None:
                 data += "\n## %s\n" % section
