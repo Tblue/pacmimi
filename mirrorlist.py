@@ -41,7 +41,6 @@ class Mirrorlist:
         self._parse()
 
     def _parse(self):
-        # Read all lines from the file.
         lines = self._file.readlines()
         section = None
 
@@ -58,15 +57,15 @@ class Mirrorlist:
 
                     continue
 
-            # Start of new section?
-            match = re.search(r'^\s*##\s*(.+?)\s*$', line)
-            if match is not None:
-                section = match.group(1)
-                continue
-
             match = re.search(r'^\s*(#)?\s*Server\s*=\s*(.+?)\s*$', line)
             if match is None:
                 continue
+
+            # Are we in a new section?
+            if i > 0:
+                section_match = re.search(r'^\s*##\s*(.+?)\s*$', lines[i-1])
+                if section_match is not None:
+                    section = section_match.group(1)
 
             servers = self.servers.setdefault(
                 section,
