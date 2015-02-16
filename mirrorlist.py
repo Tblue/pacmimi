@@ -123,13 +123,15 @@ class Mirrorlist:
         data += "\n##\n"
 
         for section in self.servers:
+            data += "\n"
+
             if section is not None:
-                data += "\n## %s\n" % section
+                data += "## %s\n" % section
 
-                for used_server in self.servers[section].used:
-                    data += "Server = %s\n" % used_server
+            for used_server in self.servers[section].used:
+                data += "Server = %s\n" % used_server
 
-                for unused_server in self.servers[section].unused:
-                    data += "#Server = %s\n" % unused_server
+            for unused_server in self.servers[section].unused:
+                data += "#Server = %s\n" % unused_server
 
         return data
