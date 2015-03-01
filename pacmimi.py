@@ -26,6 +26,7 @@
 # USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import argparse
+import os
 import sys
 
 from mirrorlist import Mirrorlist
@@ -34,6 +35,24 @@ from mirrorlist import Mirrorlist
 def setup_argparser():
     arg_parser = argparse.ArgumentParser(
         description="Merges two Pacman mirrorlist files and outputs the result to stdout."
+    )
+
+    arg_parser.add_argument(
+        "-b",
+        "--backup",
+        nargs="?",
+        metavar="SUFFIX",
+        default=False,
+        const="~",
+        help="If given, make a backup of out_file before modifying it. The file is moved to a file with the same "
+             "name, but with a special suffix appended (default: `%(const)s'). An alternative suffix can be given as "
+             "an argument to this option. Implies --in-place."
+    )
+    arg_parser.add_argument(
+        "-i",
+        "--in-place",
+        action="store_true",
+        help="Modify old_file directly instead of outputting results to stdout."
     )
 
     arg_parser.add_argument(
@@ -50,6 +69,10 @@ def setup_argparser():
 
 parsed_args = setup_argparser().parse_args()
 
+# --backup implies --in-place.
+if parsed_args.backup is not False:
+    parsed_args.in_place = True
+
 # Open both files for reading.
 try:
     old_file = open(parsed_args.old_file, "r", encoding="utf-8")
@@ -65,9 +88,36 @@ try:
 except IOError as e:
     print("Could not parse input file: %s" % e, file=sys.stderr)
     sys.exit(3)
+finally:
+    old_file.close()
+    new_file.close()
 
 # Now merge both lists!
 new_mirrorlist.merge_from_simple(old_mirrorlist)
 
+# Do need to backup the original old_file?
+if parsed_args.backup is not False:
+    backup_file = parsed_args.old_file + parsed_args.backup
+
+    try:
+        if os.access(backup_file, os.F_OK):
+            raise OSError("Destination file exists")
+
+        os.rename(parsed_args.old_file, backup_file)
+    except OSError as e:
+        print(
+            "Could not backup input file `%s' to `%s': %s" % (parsed_args.old_file, backup_file, e),
+            file=sys.stderr
+        )
+        sys.exit(4)
+
 # That's it. output the new mirrorlist.
-print(new_mirrorlist.get_string())
+output_file = sys.stdout
+if parsed_args.in_place:
+    try:
+        output_file = open(parsed_args.old_file, "w", encoding="utf-8")
+    except IOError as e:
+        print("Could not open output file: %s" % e, file=sys.stderr)
+        sys.exit(5)
+
+print(new_mirrorlist.get_string(), file=output_file)
