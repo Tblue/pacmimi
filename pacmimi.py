@@ -95,7 +95,7 @@ finally:
 # Now merge both lists!
 new_mirrorlist.merge_from_simple(old_mirrorlist)
 
-# Do need to backup the original old_file?
+# Do we need to backup the original old_file?
 if parsed_args.backup is not False:
     backup_file = parsed_args.old_file + parsed_args.backup
 
