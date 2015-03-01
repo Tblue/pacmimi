@@ -44,7 +44,7 @@ def setup_argparser():
         metavar="SUFFIX",
         default=False,
         const="~",
-        help="If given, make a backup of out_file before modifying it. The file is moved to a file with the same "
+        help="If given, make a backup of old_file before modifying it. The file is moved to a file with the same "
              "name, but with a special suffix appended (default: `%(const)s'). An alternative suffix can be given as "
              "an argument to this option. Implies --in-place."
     )
