@@ -49,6 +49,12 @@ def setup_argparser():
              "an argument to this option. Implies --in-place."
     )
     arg_parser.add_argument(
+        "-f",
+        "--force",
+        action="store_true",
+        help="Overwrite the backup of old_file if it exists."
+    )
+    arg_parser.add_argument(
         "-i",
         "--in-place",
         action="store_true",
@@ -100,7 +106,7 @@ if parsed_args.backup is not False:
     backup_file = parsed_args.old_file + parsed_args.backup
 
     try:
-        if os.access(backup_file, os.F_OK):
+        if not parsed_args.force and os.access(backup_file, os.F_OK):
             raise OSError("Destination file exists")
 
         os.rename(parsed_args.old_file, backup_file)
