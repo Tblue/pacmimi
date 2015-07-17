@@ -41,12 +41,13 @@ def setup_argparser():
         "-b",
         "--backup",
         nargs="?",
-        metavar="SUFFIX",
+        metavar="FORMAT",
         default=False,
-        const="~",
-        help="If given, make a backup of old_file before modifying it. The file is moved to a file with the same "
-             "name, but with a special suffix appended (default: `%(const)s'). An alternative suffix can be given as "
-             "an argument to this option. Implies --in-place."
+        const="_orig_%b",
+        help="If given, make a backup of old_file before modifying it. The filename of the backup is determined by "
+             "replacing all occurrences of `%%b' in %(metavar)s with the basename of old_file and `%%p' with the "
+             "full path of old_file as specified on the command line. Use `%%%%' to include a single `%%' char. "
+             "Implies --in-place. Default %(metavar)s if option given without a specific value: `%(const)s'."
     )
     arg_parser.add_argument(
         "-f",
@@ -79,6 +80,10 @@ parsed_args = setup_argparser().parse_args()
 if parsed_args.backup is not False:
     parsed_args.in_place = True
 
+    parsed_args.backup = parsed_args.backup.replace("%b", os.path.basename(parsed_args.old_file))
+    parsed_args.backup = parsed_args.backup.replace("%p", parsed_args.old_file)
+    parsed_args.backup = parsed_args.backup.replace("%%", "%")
+
 # Open both files for reading.
 try:
     old_file = open(parsed_args.old_file, "r", encoding="utf-8")
@@ -103,16 +108,14 @@ new_mirrorlist.merge_from_simple(old_mirrorlist)
 
 # Do we need to backup the original old_file?
 if parsed_args.backup is not False:
-    backup_file = parsed_args.old_file + parsed_args.backup
-
     try:
-        if not parsed_args.force and os.access(backup_file, os.F_OK):
+        if not parsed_args.force and os.access(parsed_args.backup, os.F_OK):
             raise OSError("Destination file exists")
 
-        os.rename(parsed_args.old_file, backup_file)
+        os.rename(parsed_args.old_file, parsed_args.backup)
     except OSError as e:
         print(
-            "Could not backup input file `%s' to `%s': %s" % (parsed_args.old_file, backup_file, e),
+            "Could not backup input file `%s' to `%s': %s" % (parsed_args.old_file, parsed_args.backup, e),
             file=sys.stderr
         )
         sys.exit(4)
