@@ -91,20 +91,6 @@ def process_backup_format(orig_format, replacements, match):
 
 parsed_args = setup_argparser().parse_args()
 
-# --backup implies --in-place.
-if parsed_args.backup is not False:
-    parsed_args.in_place = True
-    parsed_args.backup = re.sub(
-        "%.",
-        functools.partial(process_backup_format,
-                          parsed_args.backup, {
-                              "%%": "%",
-                              "%b": os.path.basename(parsed_args.old_file),
-                              "%p": parsed_args.old_file
-                          }),
-        parsed_args.backup
-    )
-
 # Open both files for reading.
 try:
     old_file = open(parsed_args.old_file, "r", encoding="utf-8")
@@ -129,6 +115,20 @@ new_mirrorlist.merge_from_simple(old_mirrorlist)
 
 # Do we need to backup the original old_file?
 if parsed_args.backup is not False:
+    # --backup implies --in-place.
+    parsed_args.in_place = True
+
+    parsed_args.backup = re.sub(
+        "%.",
+        functools.partial(process_backup_format,
+                          parsed_args.backup, {
+                              "%%": "%",
+                              "%b": os.path.basename(parsed_args.old_file),
+                              "%p": parsed_args.old_file
+                          }),
+        parsed_args.backup
+    )
+
     try:
         if not parsed_args.force and os.access(parsed_args.backup, os.F_OK):
             raise OSError("Destination file exists")
