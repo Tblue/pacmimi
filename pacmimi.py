@@ -52,7 +52,7 @@ def setup_argparser():
              "`%%p' gets replaced by old_file as specified on the command line; "
              "`%%d' gets replaced by the directory name of old_file as specified on the command line; "
              "`%%%%' gets replaced by a single `%%' char. "
-             "Implies --in-place. Default %(metavar)s if option given without a specific value: `%(const)s'."
+             "Implies --in-place. Default %(metavar)s if option given without an explicit value: `%(const)s'."
     )
     arg_parser.add_argument(
         "-f",
