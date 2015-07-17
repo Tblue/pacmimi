@@ -26,7 +26,9 @@
 # USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import argparse
+import functools
 import os
+import re
 import sys
 
 from mirrorlist import Mirrorlist
@@ -74,15 +76,34 @@ def setup_argparser():
     return arg_parser
 
 
+def process_backup_format(orig_format, replacements, match):
+    m = match.group(0)
+
+    if m not in replacements:
+        print(
+            "W: Unhandled format specifier `%s' in backup format `%s'." % (m, orig_format),
+            file=sys.stderr
+        )
+        return m
+
+    return replacements[m]
+
+
 parsed_args = setup_argparser().parse_args()
 
 # --backup implies --in-place.
 if parsed_args.backup is not False:
     parsed_args.in_place = True
-
-    parsed_args.backup = parsed_args.backup.replace("%b", os.path.basename(parsed_args.old_file))
-    parsed_args.backup = parsed_args.backup.replace("%p", parsed_args.old_file)
-    parsed_args.backup = parsed_args.backup.replace("%%", "%")
+    parsed_args.backup = re.sub(
+        "%.",
+        functools.partial(process_backup_format,
+                          parsed_args.backup, {
+                              "%%": "%",
+                              "%b": os.path.basename(parsed_args.old_file),
+                              "%p": parsed_args.old_file
+                          }),
+        parsed_args.backup
+    )
 
 # Open both files for reading.
 try:
