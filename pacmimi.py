@@ -45,10 +45,13 @@ def setup_argparser():
         nargs="?",
         metavar="FORMAT",
         default=False,
-        const="_orig_%b",
-        help="If given, make a backup of old_file before modifying it. The filename of the backup is determined by "
-             "replacing all occurrences of `%%b' in %(metavar)s with the basename of old_file and `%%p' with the "
-             "full path of old_file as specified on the command line. Use `%%%%' to include a single `%%' char. "
+        const=os.path.join("%d", "_orig_%b"),
+        help="If given, make a backup of old_file before modifying it. %(metavar)s determines the name of the backup "
+             "file and may contain the following format specifiers: "
+             "`%%b' gets replaced by the basename of old_file; "
+             "`%%p' gets replaced by old_file as specified on the command line; "
+             "`%%d' gets replaced by the directory name of old_file as specified on the command line; "
+             "`%%%%' gets replaced by a single `%%' char. "
              "Implies --in-place. Default %(metavar)s if option given without a specific value: `%(const)s'."
     )
     arg_parser.add_argument(
@@ -124,7 +127,8 @@ if parsed_args.backup is not False:
                           parsed_args.backup, {
                               "%%": "%",
                               "%b": os.path.basename(parsed_args.old_file),
-                              "%p": parsed_args.old_file
+                              "%p": parsed_args.old_file,
+                              "%d": os.path.dirname(parsed_args.old_file) or os.path.curdir
                           }),
         parsed_args.backup
     )
