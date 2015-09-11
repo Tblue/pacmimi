@@ -147,6 +147,7 @@ if parsed_args.backup is not False:
 
 # That's it. output the new mirrorlist.
 output_file = sys.stdout
+
 if parsed_args.in_place:
     try:
         output_file = open(parsed_args.old_file, "w", encoding="utf-8")
@@ -155,3 +156,6 @@ if parsed_args.in_place:
         sys.exit(5)
 
 print(new_mirrorlist.get_string(), file=output_file)
+
+if parsed_args.in_place:
+    output_file.close()
