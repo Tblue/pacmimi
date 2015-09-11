@@ -69,11 +69,11 @@ def setup_argparser():
 
     arg_parser.add_argument(
         "old_file",
-        help="Currently used mirrorlist file."
+        help="Currently used mirrorlist file (merge target)."
     )
     arg_parser.add_argument(
         "new_file",
-        help="New, unedited mirrorlist file (usually called `mirrorlist.pacnew')."
+        help="New, unedited mirrorlist file (merge source; usually called `mirrorlist.pacnew')."
     )
 
     return arg_parser
