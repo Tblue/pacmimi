@@ -66,6 +66,12 @@ def setup_argparser():
         action="store_true",
         help="Modify old_file directly instead of outputting results to stdout."
     )
+    arg_parser.add_argument(
+        "-u",
+        "--remove-new",
+        action="store_true",
+        help="Remove new_file after a successful run."
+    )
 
     arg_parser.add_argument(
         "old_file",
@@ -159,3 +165,10 @@ print(new_mirrorlist.get_string(), file=output_file)
 
 if parsed_args.in_place:
     output_file.close()
+
+# Finally, unlink the merge source, if requested.
+if parsed_args.remove_new:
+    try:
+        os.unlink(parsed_args.new_file)
+    except IOError as e:
+        print("Warning: Could not remove merge source: %s" % e, file=sys.stderr)
