@@ -34,18 +34,29 @@ import sys
 from mirrorlist import Mirrorlist
 
 
+
+# Default value for -b when option is specified by the user without an explicit value.
+BACKUP_CONST_ARG = os.path.join("%d", "_orig_%b")
+
+
 def setup_argparser():
     arg_parser = argparse.ArgumentParser(
         description="Merges two Pacman mirrorlist files and outputs the result to stdout."
     )
 
     arg_parser.add_argument(
+        "-s",
+        "--sane-defaults",
+        action="store_true",
+        help="Enable sane/useful defaults for regular use. Equal to specifying the options `-f -i -u -b'."
+    )
+    arg_parser.add_argument(
         "-b",
         "--backup",
         nargs="?",
         metavar="FORMAT",
         default=False,
-        const=os.path.join("%d", "_orig_%b"),
+        const=BACKUP_CONST_ARG,
         help="If given, make a backup of old_file before modifying it. %(metavar)s determines the name of the backup "
              "file and may contain the following format specifiers: "
              "`%%b' gets replaced by the basename of old_file; "
@@ -99,6 +110,13 @@ def process_backup_format(orig_format, replacements, match):
 
 
 parsed_args = setup_argparser().parse_args()
+
+if parsed_args.sane_defaults:
+    # -s (--sane-defaults) implies -f -i -u -b
+    parsed_args.force = True
+    parsed_args.in_place = True
+    parsed_args.remove_new = True
+    parsed_args.backup = BACKUP_CONST_ARG
 
 # Open both files for reading.
 try:
