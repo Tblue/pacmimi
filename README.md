@@ -29,14 +29,16 @@ A concrete use case for such an utility is the following:
 The last point is where _pacmimi_ comes in. _pacmimi_ relieves you of that
 tedious work -- it removes mirrors which are not available anymore from your
 local `mirrorlist` and adds newly added mirrors as disabled (commented)
-entries. At the same time, it keeps your enabled mirrors and their order.
+entries. At the same time, it keeps your enabled mirrors and their order
+(it will, however, remove those enabled mirrors which are not present
+anymore in the new `mirrorlist`).
 
 ## Dependencies
 _pacmimi_ has no special dependencies except for Python 3.
 
 ## Quick start
 
-1. Clone this repository somewhere on your machine.
+1. Clone this repository somewhere to your machine.
 2. Execute: `sudo ./pacmimi.py -s /etc/pacman.d/mirrorlist*`
 3. This will merge your `mirrorlist` and `mirrorlist.pacnew` files and remove
    `mirrorlist.pacnew` when it's done. It backups the original `mirrorlist` to
