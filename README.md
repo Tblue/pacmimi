@@ -37,10 +37,10 @@ _pacmimi_ has no special dependencies except for Python 3.
 ## Quick start
 
 1. Clone this repository somewhere on your machine.
-2. Execute: `sudo pacmimi.py -s /etc/pacman.d/mirrorlist*`
+2. Execute: `sudo ./pacmimi.py -s /etc/pacman.d/mirrorlist*`
 3. This will merge your `mirrorlist` and `mirrorlist.pacnew` files and remove
    `mirrorlist.pacnew` when it's done. It backups the original `mirrorlist` to
    `/etc/pacman.d/_orig_mirrorlist` before modifying it.
 
-See `pacmimi.py -h` for available options. The `-s` (`--sane-defaults`) option used
+See `./pacmimi.py -h` for available options. The `-s` (`--sane-defaults`) option used
 above enables useful default options.
