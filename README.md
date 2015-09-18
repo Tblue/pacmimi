@@ -27,11 +27,9 @@ A concrete use case for such an utility is the following:
   that gets tedious fast.
 
 The last point is where _pacmimi_ comes in. _pacmimi_ relieves you of that
-tedious work -- it removes unused mirrors which are not available anymore
-from your local `mirrorlist` and adds newly added mirrors which are ready
-to be uncommented by you (no new uncommented entries are added for servers
-which you have already enabled in order to keep your `mirrorlist` clean).
-At the same time, it keeps your enabled mirrors and their order.
+tedious work -- it removes mirrors which are not available anymore from your
+local `mirrorlist` and adds newly added mirrors as disabled (commented)
+entries. At the same time, it keeps your enabled mirrors and their order.
 
 ## Dependencies
 _pacmimi_ has no special dependencies except for Python 3.
