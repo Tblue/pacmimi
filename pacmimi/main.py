@@ -28,11 +28,11 @@
 import argparse
 import functools
 import os
+import os.path
 import re
 import sys
 
-from mirrorlist import Mirrorlist
-
+from .mirrorlist import Mirrorlist
 
 
 # Default value for -b when option is specified by the user without an explicit value.
@@ -109,84 +109,85 @@ def process_backup_format(orig_format, replacements, match):
     return replacements[m]
 
 
-parsed_args = setup_argparser().parse_args()
+def main():
+    parsed_args = setup_argparser().parse_args()
 
-if parsed_args.sane_defaults:
-    # -s (--sane-defaults) implies -f -i -u -b
-    parsed_args.force = True
-    parsed_args.in_place = True
-    parsed_args.remove_new = True
-    parsed_args.backup = BACKUP_CONST_ARG
+    if parsed_args.sane_defaults:
+        # -s (--sane-defaults) implies -f -i -u -b
+        parsed_args.force = True
+        parsed_args.in_place = True
+        parsed_args.remove_new = True
+        parsed_args.backup = BACKUP_CONST_ARG
 
-# Open both files for reading.
-try:
-    old_file = open(parsed_args.old_file, "r", encoding="utf-8")
-    new_file = open(parsed_args.new_file, "r", encoding="utf-8")
-except IOError as e:
-    print("Could not open input file: %s" % e, file=sys.stderr)
-    sys.exit(2)
-
-# Now parse both files.
-try:
-    old_mirrorlist = Mirrorlist(old_file)
-    new_mirrorlist = Mirrorlist(new_file)
-except IOError as e:
-    print("Could not parse input file: %s" % e, file=sys.stderr)
-    sys.exit(3)
-finally:
-    old_file.close()
-    new_file.close()
-
-# Now merge both lists!
-new_mirrorlist.merge_from_simple(old_mirrorlist)
-
-# Do we need to backup the original old_file?
-if parsed_args.backup is not False:
-    # --backup implies --in-place.
-    parsed_args.in_place = True
-
-    parsed_args.backup = re.sub(
-        "%.",
-        functools.partial(process_backup_format,
-                          parsed_args.backup, {
-                              "%%": "%",
-                              "%b": os.path.basename(parsed_args.old_file),
-                              "%p": parsed_args.old_file,
-                              "%d": os.path.dirname(parsed_args.old_file) or os.path.curdir
-                          }),
-        parsed_args.backup
-    )
-
+    # Open both files for reading.
     try:
-        if not parsed_args.force and os.access(parsed_args.backup, os.F_OK):
-            raise OSError("Destination file exists")
+        old_file = open(parsed_args.old_file, "r", encoding="utf-8")
+        new_file = open(parsed_args.new_file, "r", encoding="utf-8")
+    except IOError as e:
+        print("Could not open input file: %s" % e, file=sys.stderr)
+        return 2
 
-        os.rename(parsed_args.old_file, parsed_args.backup)
-    except OSError as e:
-        print(
-            "Could not backup input file `%s' to `%s': %s" % (parsed_args.old_file, parsed_args.backup, e),
-            file=sys.stderr
+    # Now parse both files.
+    try:
+        old_mirrorlist = Mirrorlist(old_file)
+        new_mirrorlist = Mirrorlist(new_file)
+    except IOError as e:
+        print("Could not parse input file: %s" % e, file=sys.stderr)
+        return 3
+    finally:
+        old_file.close()
+        new_file.close()
+
+    # Now merge both lists!
+    new_mirrorlist.merge_from_simple(old_mirrorlist)
+
+    # Do we need to backup the original old_file?
+    if parsed_args.backup is not False:
+        # --backup implies --in-place.
+        parsed_args.in_place = True
+
+        parsed_args.backup = re.sub(
+            "%.",
+            functools.partial(process_backup_format,
+                              parsed_args.backup, {
+                                  "%%": "%",
+                                  "%b": os.path.basename(parsed_args.old_file),
+                                  "%p": parsed_args.old_file,
+                                  "%d": os.path.dirname(parsed_args.old_file) or os.path.curdir
+                              }),
+            parsed_args.backup
         )
-        sys.exit(4)
 
-# That's it. output the new mirrorlist.
-output_file = sys.stdout
+        try:
+            if not parsed_args.force and os.access(parsed_args.backup, os.F_OK):
+                raise OSError("Destination file exists")
 
-if parsed_args.in_place:
-    try:
-        output_file = open(parsed_args.old_file, "w", encoding="utf-8")
-    except IOError as e:
-        print("Could not open output file: %s" % e, file=sys.stderr)
-        sys.exit(5)
+            os.rename(parsed_args.old_file, parsed_args.backup)
+        except OSError as e:
+            print(
+                "Could not backup input file `%s' to `%s': %s" % (parsed_args.old_file, parsed_args.backup, e),
+                file=sys.stderr
+            )
+            return 4
 
-print(new_mirrorlist.get_string(), file=output_file)
+    # That's it. output the new mirrorlist.
+    output_file = sys.stdout
 
-if parsed_args.in_place:
-    output_file.close()
+    if parsed_args.in_place:
+        try:
+            output_file = open(parsed_args.old_file, "w", encoding="utf-8")
+        except IOError as e:
+            print("Could not open output file: %s" % e, file=sys.stderr)
+            return 5
 
-# Finally, unlink the merge source, if requested.
-if parsed_args.remove_new:
-    try:
-        os.unlink(parsed_args.new_file)
-    except IOError as e:
-        print("Warning: Could not remove merge source: %s" % e, file=sys.stderr)
+    print(new_mirrorlist.get_string(), file=output_file)
+
+    if parsed_args.in_place:
+        output_file.close()
+
+    # Finally, unlink the merge source, if requested.
+    if parsed_args.remove_new:
+        try:
+            os.unlink(parsed_args.new_file)
+        except IOError as e:
+            print("Warning: Could not remove merge source: %s" % e, file=sys.stderr)
