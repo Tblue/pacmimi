@@ -32,6 +32,7 @@ import os.path
 import re
 import sys
 
+from . import app_version
 from .mirrorlist import Mirrorlist
 
 
@@ -82,6 +83,13 @@ def setup_argparser():
         "--remove-new",
         action="store_true",
         help="Remove new_file after a successful run."
+    )
+    arg_parser.add_argument(
+        "-V",
+        "--version",
+        action="version",
+        version="%(prog)s " + app_version.version,
+        help="Display the version of this program and exit."
     )
 
     arg_parser.add_argument(
