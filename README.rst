@@ -58,6 +58,14 @@ Quick start
 See ``pacmimi -h`` for available options. The ``-s`` (``--sane-defaults``) option used
 above enables useful default options.
 
+Version history
+---------------
+
+Version 1.0.0
++++++++++++++
+
+- First release on PyPI.
+
 
 .. _pacman package manager: https://www.archlinux.org/pacman/
 .. _pip: https://pypi.python.org/pypi/pip
