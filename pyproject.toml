@@ -1,0 +1,50 @@
+[build-system]
+requires = [
+    "setuptools >= 69.5",
+    "setuptools_scm >= 8.1",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pacmimi"
+authors = [
+    { name = "Tilman Blumenbach", email = "tilman+pypi@ax86.net" },
+]
+description = "Arch Linux Pacman mirrorlist merging utility"
+readme = "README.rst"
+license = { text = "BSD License (BSD-3-Clause)" }
+classifiers=[
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: BSD License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.2",
+    "Programming Language :: Python :: 3.3",
+    "Programming Language :: Python :: 3.4",
+    "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: System :: Systems Administration",
+    "Topic :: Utilities",
+]
+
+dynamic = ["version"]
+requires-python = ">= 3.2"
+
+[project.urls]
+Repository = "https://github.com/Tblue/pacmimi"
+Issues = "https://github.com/Tblue/pacmimi/issues"
+
+[project.scripts]
+pacmimi = "pacmimi.main:main"
+
+[tool.setuptools_scm]
+version_file = "pacmimi/app_version.py"
