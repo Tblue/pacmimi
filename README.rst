@@ -63,8 +63,8 @@ You can also `pip`_ to install *pacmimi* only for your own user, e.g.::
 GPG-signed Git release tags
 +++++++++++++++++++++++++++
 
-From version 1.1.1 and newer, all Git release tags such as `v1.1.1` are signed
-with the following GPG key:
+From version 1.1.1 and newer, all Git release tags such as ``v1.1.1`` are
+signed with the following GPG key:
 
 - User ID: ``Tilman Blumenbach <tilman+git@ax86.net>``
 - Fingerprint: ``B67B D719 C23D C2A4 03E1  5EB1 02DE 477F 6DDE 8B17``
