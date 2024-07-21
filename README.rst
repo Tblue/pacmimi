@@ -122,7 +122,7 @@ Version 1.0.0
     :target: https://pypi.python.org/pypi/pacmimi
 
 
-.. |aur-badge| image:: https://img.shields.io/pypi/v/pacmimi
+.. |aur-badge| image:: https://img.shields.io/aur/version/pacmimi
     :alt:
     :align: middle
     :target: https://aur.archlinux.org/packages/pacmimi
