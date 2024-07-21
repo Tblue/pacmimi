@@ -87,6 +87,13 @@ option used above enables useful default options.
 Version history
 ---------------
 
+Version 1.1.2
++++++++++++++
+
+- Update README to include AUR package information.
+
+This is really just a release intended to update the README on PyPI, and should've been part of v1.1.1...
+
 Version 1.1.1
 +++++++++++++
 
