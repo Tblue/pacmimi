@@ -1,5 +1,5 @@
-pacmimi: An Arch Linux Pacman mirrorlist merging utility |pypi-badge|
-=====================================================================
+pacmimi: An Arch Linux Pacman mirrorlist merging utility |pypi-badge| |aur-badge|
+=================================================================================
 
 *pacmimi* is an utility to merge two files in the ``mirrorlist`` format
 used by the `pacman package manager`_ into a single file.
@@ -122,4 +122,10 @@ Version 1.0.0
     :target: https://pypi.python.org/pypi/pacmimi
 
 
-.. vim: tw=79
+.. |aur-badge| image:: https://img.shields.io/pypi/v/pacmimi
+    :alt:
+    :align: middle
+    :target: https://aur.archlinux.org/packages/pacmimi
+
+
+.. vim: tw=120
