@@ -12,7 +12,7 @@ authors = [
 ]
 description = "Arch Linux Pacman mirrorlist merging utility"
 readme = "README.rst"
-license = { text = "BSD License (BSD-3-Clause)" }
+license = { text = "BSD 3-Clause License" }
 classifiers=[
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
