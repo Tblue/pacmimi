@@ -37,13 +37,39 @@ anymore in the new ``mirrorlist``).
 Installation
 ------------
 
-To install *pacmimi*, use `pip`_::
+Install on Arch Linux
++++++++++++++++++++++
 
-    pip install pacmimi
+On Arch Linux, I provide an `AUR package`_ called ``pacmimi``.
+
+Please refer to the `AUR page on the Arch Linux wiki`_ for help on how to use
+the AUR.
+
+An example installation command might be::
+
+    paru -S pacmimi
+
+Install using pip
++++++++++++++++++
+
+You can also `pip`_ to install *pacmimi* only for your own user, e.g.::
+
+    pip install --user pacmimi
 
 .. note::
 
     *pacmimi* requires Python 3.
+
+GPG-signed Git release tags
++++++++++++++++++++++++++++
+
+From version 1.1.1 and newer, all Git release tags such as `v1.1.1` are signed
+with the following GPG key:
+
+- User ID: ``Tilman Blumenbach <tilman+git@ax86.net>``
+- Fingerprint: ``B67B D719 C23D C2A4 03E1  5EB1 02DE 477F 6DDE 8B17``
+- Download: Use any major PGP keyserver or
+  https://www.ax86.net/attachments/pgp-key.asc
 
 Quick start
 -----------
@@ -51,15 +77,20 @@ Quick start
 1. Execute the following command::
 
     sudo pacmimi -s /etc/pacman.d/mirrorlist*
-2. This will merge your ``mirrorlist`` and ``mirrorlist.pacnew`` files and remove
-   ``mirrorlist.pacnew`` when it's done. It backups the original ``mirrorlist`` to
-   ``/etc/pacman.d/_orig_mirrorlist`` before modifying it.
+2. This will merge your ``mirrorlist`` and ``mirrorlist.pacnew`` files and
+   remove ``mirrorlist.pacnew`` when it's done. It backups the original
+   ``mirrorlist`` to ``/etc/pacman.d/_orig_mirrorlist`` before modifying it.
 
-See ``pacmimi -h`` for available options. The ``-s`` (``--sane-defaults``) option used
-above enables useful default options.
+See ``pacmimi -h`` for available options. The ``-s`` (``--sane-defaults``)
+option used above enables useful default options.
 
 Version history
 ---------------
+
+Version 1.1.1
++++++++++++++
+
+- GPG-sign Git release tags.
 
 Version 1.1.0
 +++++++++++++
@@ -73,6 +104,9 @@ Version 1.0.0
 
 
 .. _pacman package manager: https://www.archlinux.org/pacman/
+.. _AUR package: https://aur.archlinux.org/packages/pacmimi
+.. _AUR page on the Arch Linux wiki:
+    https://wiki.archlinux.org/title/Arch_User_Repository
 .. _pip: https://pypi.python.org/pypi/pip
 
 
@@ -86,3 +120,6 @@ Version 1.0.0
     :alt:
     :align: middle
     :target: https://pypi.python.org/pypi/pacmimi
+
+
+.. vim: tw=79
