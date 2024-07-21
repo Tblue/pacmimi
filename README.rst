@@ -61,6 +61,11 @@ above enables useful default options.
 Version history
 ---------------
 
+Version 1.1.0
++++++++++++++
+
+- Build process modernization.
+
 Version 1.0.0
 +++++++++++++
 
