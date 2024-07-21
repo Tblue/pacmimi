@@ -67,7 +67,7 @@ From version 1.1.1 and newer, all Git release tags such as ``v1.1.1`` are
 signed with the following GPG key:
 
 - User ID: ``Tilman Blumenbach <tilman+git@ax86.net>``
-- Fingerprint: ``B67B D719 C23D C2A4 03E1  5EB1 02DE 477F 6DDE 8B17``
+- Fingerprint: ``B67BD719C23DC2A403E15EB102DE477F6DDE8B17``
 - Download: Use any major PGP keyserver or
   https://www.ax86.net/attachments/pgp-key.asc
 
